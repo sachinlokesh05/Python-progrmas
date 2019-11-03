@@ -21,7 +21,7 @@ class Machine:
 
     def Bank_operation(self,g_pepole_queue):
             f_people_queue=g_pepole_queue
-            f_total_cash=100
+            f_total_cash=100000000
             iterating_element=0
             while iterating_element<=len(f_people_queue):
                 if f_people_queue is not None:

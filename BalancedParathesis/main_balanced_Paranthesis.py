@@ -1,4 +1,4 @@
-from DataStructure.BalancedParathesis.balanced_Parathensise import BalancedParenthesis
+from BalancedParathesis.balanced_Parathensise import BalancedParenthesis
 
 g_expression = list(input("Enter string : "))  # Convert the expression into a
 # list of characters

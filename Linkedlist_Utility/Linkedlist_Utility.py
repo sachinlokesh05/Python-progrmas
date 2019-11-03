@@ -44,10 +44,9 @@ class Singlelinkedlist:
     def insertion_first(self,n,data,position):
         p=Node(data)
         t=n
-        if(position==0):
-            n.next = t.next
-            t.next = n
-        return n
+        if self.head is not None:
+            p.next=self.head
+            self.head=p
 
 #To insert the data at last
     def insertion_last(self,h,data):
@@ -74,7 +73,7 @@ class Singlelinkedlist:
         while position > 1:
             t=t.next
             position-=1
-        t=fast
+        t.next=fast
 
 #To delete the data at last
     def delete_last(self,n):
@@ -84,42 +83,43 @@ class Singlelinkedlist:
         t.next=None
 
 #To search given element in the list
-    def search(self,data):
-        t=self.head
+    def search(self, data):
+        t = self.head
         count=0
-        while t.data!=data:
-            count += 1
-            t=t.next
-        print(count)
+        while t.data != data:
+            t = t.next
+            return
+        return True
 
 
-    def treverse(self,n):
-        t=n
-        count=0
-        while t!=None:
+
+
+    def treverse (self, n):
+        t = n
+        count = 0
+        while t != None:
             count+=1
             t=t.next
         return(count)
-
-
 sl=Singlelinkedlist()
-print(sl.treverse(sl.head))
-# sl.add(50)
-# sl.add(20)
-# sl.add(55)
-# sl.add(("sachin"))
-# sl.display()
-# # sl.insertion_middle(sl.head,22,2)
-# # print("")
+sl.add(20)
+sl.add(55)
+sl.add(("sachin"))
+sl.display()
+# sl.insertion_middle(sl.head,22,2)
+print("")
 # # sl.display()
 # # sl.insertion_first(sl.head,10,0)
 # # print("\n")
 # # sl.display()
 # # sl.insertion_last(sl.head,88)
 # # print("\n")
-# # sl.display()
-# # sl.delet_first()
-# # sl.delete_mid(sl.head,1)
-# # sl.delete_last(sl.head)
-# # sl.display()
-# sl.search("sachin")
+sl.insertion_first(sl.head,10,0)
+sl.display()
+print("\n")
+sl.delet_first()
+sl.delete_mid(sl.head,1)
+print("")
+# sl.delete_last(sl.head)
+sl.display()
+# print(sl.search("sachin"))
