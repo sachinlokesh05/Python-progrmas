@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "C:/Users/sachin/.PyCharmCE2019.2/config/scratches/a1.py", line 4, in <module>
+    raise Exception('this is an error')
+Exception: this is an error

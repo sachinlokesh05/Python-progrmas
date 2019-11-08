@@ -1,0 +1,24 @@
+{
+  "Rice":
+[
+  {
+    "name" : "basmati",
+    "weight" : 20,
+    "Price per kg" : 55
+  },
+  {
+    "name": "plain rice",
+    "weight" : 50,
+    "Price per kg" : 20
+  }
+],
+  "Wheat":
+  [
+    {
+      "name": "polished rice",
+      "weight" : 50,
+      "Price per kg" : 20
+
+    }
+  ]
+}
