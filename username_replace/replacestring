@@ -1,6 +1,0 @@
-def stringReplace(input,string):
-    if len(input)>3:
-        resultstring=string.replace('<<user name>>',input)
-        return resultstring
-    else:
-        print("pls enter the input string which has more than 3 characters")
