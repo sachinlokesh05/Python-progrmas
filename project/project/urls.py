@@ -1,6 +1,6 @@
 from django.contrib import admin
-from django.conf.urls import path, include
-
+from django.urls import path
+from django.conf.urls import include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('fundoo/', include('fundoo.urls'))

@@ -24,25 +24,25 @@ class RegistrationSerializer(serializers.ModelSerializer):
         return account
 
 
-# class UserSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model: User
-#         fieids: ['username', 'password', 'email']
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model: User
+        fieids: ['username', 'password', 'email']
 
 
-# class LoginSerializers(serializers.ModelSerializer):
-#     class Meta:
-#         model: User
-#         fields: ['username', 'password']
+class LoginSerializers(serializers.ModelSerializer):
+    class Meta:
+        model: User
+        fields: ['username', 'password']
 
 
-# class ResetSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model: User
-#         fields: '[password]'
+class ResetSerializer(serializers.ModelSerializer):
+    class Meta:
+        model: User
+        fields: '[password]'
 
 
-# class EmailSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model: User
-#         fields:  ['email']
+class EmailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model: User
+        fields:  ['email']
