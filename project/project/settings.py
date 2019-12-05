@@ -39,6 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'fundoo',
+    'storages',
+    'rest_framework_swagger',
+    'django_short_url',
 
 ]
 

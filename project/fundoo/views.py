@@ -272,25 +272,129 @@ class ForgotPassword(GenericAPIView):
 
 
 
-class Logout(GenericAPIView):
-    serializer_class = LoginSerializer
+def activate(request, surl):
+    """
+    :param request: request is made by the used
+    :param token:  token is fetched from url
+    :return: will register the account
+    """
+    try:
+        # decode is done for the JWT token where username is fetched
 
-    def get(self, request):
-        """
-        :param request: logout request is made
-        :return: we will delete the token which was stored in redis
-        """
-        smd = {"success": False, "message": "not a vaild user", "data": []}
-        try:
-            user = request.user
-            # red = Redis()
-            red.delete(user.username)
-            smd = {"success": True, "message": " logged out", "data": []}
-            logger.info("%s looged out succesfully ", user)
-            return HttpResponse(json.dumps(smd), status=200)
-        except Exception:
-            logger.error("something went wrong while logging out")
+        tokenobject = ShortURL.objects.get(surl=surl)
+        token = tokenobject.lurl
+        decode = jwt.decode(token, settings.SECRET_KEY)
+        username = decode['username']
+        user = User.objects.get(username=username)
+
+        # if user is not none then user account willed be activated
+        if user is not None:
+            user.is_active = True
+            user.save()
+            messages.info(request, "your account is active now")
+            return redirect('/api/login')
+        else:
+            messages.info(request, 'was not able to sent the email')
+            return redirect('/api/registration')
+    except KeyError:
+        messages.info(request, 'was not able to sent the email')
+        return redirect('/api/registration')
+    except ExpiredSignatureError:
+        messages.info(request, 'activation link expired')
+        return redirect('/api/registration')
+    except Exception:
+        messages.info(request, 'activation link expired')
+        return redirect('/api/registration')
+
+
+def reset_password(request, surl):
+    """
+    :param surl:  token is again send to the user
+    :param request:  user will request for resetting password
+    :return: will reset the password
+    """
+    try:
+        # here decode is done with jwt
+
+        tokenobject = ShortURL.objects.get(surl=surl)
+        token = tokenobject.lurl
+        decode = jwt.decode(token, settings.SECRET_KEY)
+        username = decode['username']
+        user = User.objects.get(username=username)
+
+        # if user is not none then we will fetch the data and redirect to the reset password page
+        if user is not None:
+            context = {'userReset': user.username}
+            print(context)
+            return redirect('/api/resetpassword/' + str(user))
+        else:
+            messages.info(request, 'was not able to sent the email')
+            return redirect('/api/forgotpassword')
+    except KeyError:
+        messages.info(request, 'was not able to sent the email')
+        return redirect('/api/forgotpassword')
+    except Exception as e:
+        print(e)
+        messages.info(request, 'activation link expired')
+        return redirect('/api/forgotpassword')
+
+
+class ResetPassword(GenericAPIView):
+    """
+    :param user_reset: username is fetched
+    :param request:  user will request for resetting password
+    :return: will chnage the password
+    """
+    serializer_class = ResetSerializer
+
+    # @csrf_protect
+    def post(self, request, user_reset):
+        # pdb.set_trace()
+        password = request.data['password']
+
+        smd = {
+            'success': False,
+            'message': 'password reset not done',
+            'data': [],
+        }
+        # password validation is done in this form
+        if user_reset is None:
+            smd['message'] = 'not a vaild user'
+            return HttpResponse(json.dumps(smd), status=404)
+
+        elif password == "":
+            smd['message'] = 'one of the fields are empty'
             return HttpResponse(json.dumps(smd), status=400)
+
+        elif len(password) <= 4:
+            smd['message'] = 'password should be 4 or  more than 4 character'
+            return HttpResponse(json.dumps(smd), status=400)
+
+        else:
+            try:
+
+                user = User.objects.get(username=user_reset)
+                user.set_password(password)
+                # here we will save the user password in the database
+                user.save()
+
+                smd = {
+                    'success': True,
+                    'message': 'password reset done',
+                    'data': [],
+                }
+                return HttpResponse(json.dumps(smd), status=201)
+            except User.DoesNotExist:
+                smd['message'] = 'not a vaild user '
+                return HttpResponse(json.dumps(smd), status=400)
+
+
+def session(request):
+    """
+    :param request: request is made
+    :return:  if token is deleted and user goes back then it will take to user page
+    """
+    return render(request, 'user/session.html')
 
 
 
