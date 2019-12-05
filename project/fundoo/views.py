@@ -272,6 +272,30 @@ class ForgotPassword(GenericAPIView):
 
 
 
+class Logout(GenericAPIView):
+    serializer_class = LoginSerializer
+
+    def get(self, request):
+        """
+        :param request: logout request is made
+        :return: we will delete the token which was stored in redis
+        """
+        smd = {"success": False, "message": "not a vaild user", "data": []}
+        try:
+            user = request.user
+            # red = Redis()
+            red.delete(user.username)
+            smd = {"success": True, "message": " logged out", "data": []}
+            logger.info("%s looged out succesfully ", user)
+            return HttpResponse(json.dumps(smd), status=200)
+        except Exception:
+            logger.error("something went wrong while logging out")
+            return HttpResponse(json.dumps(smd), status=400)
+
+
+
+
+
 
 
 
