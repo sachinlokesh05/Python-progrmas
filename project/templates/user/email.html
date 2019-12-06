@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+        <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1">
+{#  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">#}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <title>Title</title>
+
+</head>
+<body>
+<style>
+img {
+  background: {{ notes }};
+  width: 400px;
+  height: 300px;
+  display: block;
+  margin: 10px auto;
+  border: 0;
+}
+</style>
+
+
+{#<img  src="https://ik.imagekit.io/demo/img/image1.jpeg?tr=w-400,h-300" >#}
+{#<img  src="https://ik.imagekit.io/demo/img/image2.jpeg?tr=w-400,h-300" >#}
+{#<img  src="https://ik.imagekit.io/demo/img/image3.jpg?tr=w-400,h-300" >#}
+<img src="image10.jpeg" >
+{#<img  class="data-lazy" data-lazy="https://ik.imagekit.io/demo/img/image5.jpeg?tr=w-400,h-300" >#}
+{#<img class="data-lazy" data-lazy="https://ik.imagekit.io/demo/img/image6.jpeg?tr=w-400,h-300" >#}
+{#<img class="data-lazy" data-lazy="https://ik.imagekit.io/demo/img/image7.jpeg?tr=w-400,h-300" >#}
+{#<img class="data-lazy" data-lazy="https://ik.imagekit.io/demo/img/image8.jpeg?tr=w-400,h-300" >#}
+{#<img class="data-lazy" data-lazy="https://ik.imagekit.io/demo/img/image9.jpeg?tr=w-400,h-300" >#}
+{#<img class="data-lazy"  data-lazy="https://ik.imagekit.io/demo/img/image10.jpeg?tr=w-400,h-300" >#}
+{##}
+{#<script>#}
+{##}
+{##}
+{#        const targets = document.querySelectorAll('.data-lazy');#}
+{#        const lazyloads=target=>{#}
+{#            console.log(target);#}
+{#            const io = new IntersectionObserver((entries,observer)=>{#}
+{#                entries.forEach(entry=>{#}
+{#                    console.log(entry);#}
+{#                    if (entry.isIntersecting){#}
+{#                        const td=entry.target;#}
+{#                        const src= td.getAttribute('data-lazy');#}
+{#                        td.setAttribute('src',src);#}
+{#                        observer.disconnect();#}
+{#                    }#}
+{#                });#}
+{#            });#}
+{#    io.observe(target)#}
+{#        };#}
+{#    targets.forEach(lazyloads);#}
+
+
+{##}
+{#</script>#}
+
+</body>
+
+</html>

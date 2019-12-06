@@ -1,0 +1,118 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Email Validation</title>
+<style>
+
+.button {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
+.column {
+
+  margin-left: auto;
+  margin-right: auto;
+  padding: 10px;
+    /* Should be removed. Only for demonstration */
+}
+
+.left, .right {
+  width: 25%;
+}
+
+.middle {
+  width: 60%;
+}
+
+.middle_footer{
+width: 30%;
+}
+#logo {
+  font-family: 'Open Sans', sans-serif;
+  color: #555;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-size: 50px;
+  font-weight: 800;
+  letter-spacing: -3px;
+  line-height: 1;
+  text-shadow: #EDEDED 3px 2px 0;
+  position: relative;
+}
+.right_text {
+  position: absolute;
+  right: 200px;
+  width: 800px;
+  border: 3px solid #73AD21;
+  padding: 10px;
+}
+.menu_text {
+  width: 1090px;
+  height: 42px;
+  list-style: none;
+  margin: 10px 0 0 0; padding: 25px 10px;
+  border-top: 4px double #AAA;
+  border-bottom: 4px double #AAA;
+  position: relative;
+  text-align: center;
+}
+
+</style>
+
+
+
+<body>
+
+    <div class="right_text" style="margin-top:30px ">
+        <div class="column" align="center">
+            <div class="w3-col.m8">
+                  <h2 id="logo">Fundoo</h2><br>
+                  <h4 id ="menu_text">Please confirm your email address </h4><br>
+                  <!--div class="fakeimg">Fake Image<!/div-->
+                  <p>You have created a fundoo ID with the username: {{ user }}. As an extra security measure, please verify this is the correct email address linked to your fundoo ID by clicking the button below. </p>
+                <br> <ul class="nav nav-pills nav-justified ">
+                      <a class="button" href="http://{{ domain }}{%  url 'reset_password' surl=surl %}" >Confirm your Email with fundoo</a>
+
+                </ul>
+                <small>This link will expire in 2 days. </small><br><br>
+                 </div>
+
+
+                 <div class="col-10 offset-1">
+                <small style="font-size: x-small">You have received this email because the user {{ user }} has requested to
+                    add this email to the fundoo account at <a href="#">fundoo</a>. You can safely disregard this message if
+                    you did not add this email address. </small><br>
+                     </div>
+            <div class="col-2 offset-5" >
+                <br><br>
+                <small style="font-size: x-small">
+                <p class="column middle_footer">
+                © Bridge Labz Inc., 2019
+                Malhotra Chambers, First Floor,
+                Govandi East, Mumbai,
+                Maharashtra 400088
+                  </p>  </small><br>
+                </div>
+
+
+
+        </div>
+    </div>
+
+
+</body>
+</html>
+
