@@ -21,10 +21,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 's4!99tfm%1&o*-0-9sewvp%*+jzj5ebj%x025zqh1p2xnwe=yo'
+KK = os.getenv('AUTH_ENDPOINT')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
+DB = 0
+PORT = 5432
 ALLOWED_HOSTS = []
 
 
@@ -60,7 +62,7 @@ ROOT_URLCONF = 'project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -174,3 +176,4 @@ SWAGGER_SETTINGS = {
 
     }}
 
+AUTH_ENDPOINT = os.getenv('AUTH_ENDPOINT')

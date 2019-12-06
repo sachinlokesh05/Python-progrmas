@@ -1,6 +1,6 @@
 from fundoo import views
 from django.urls import path
-from django.conf.urls import include
+from django.conf.urls import url, include
 from django.views.decorators.csrf import csrf_exempt
 
 # app_name = 'fundoo'
@@ -10,14 +10,14 @@ urlpatterns = [
 
     # path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
     path('login/', views.Login.as_view(), name="login"),
-    path('forgotpassword', views.ForgotPassword.as_view(),name="forgotPassword"),
+    path('forgotpassword', views.ForgotPassword.as_view(), name="forgotPassword"),
     path('activate/<surl>/', views.activate, name="activate"),
     path('reset_password/<surl>/', views.reset_password, name="reset_password"),
-    path('resetpassword/<user_reset>', views.ResetPassword.as_view(), name="resetpassword"),
-    path('logout/', views.Logout.as_view() ,name="logout"),
+    path('resetpassword/<user_reset>',
+         views.ResetPassword.as_view(), name="resetpassword"),
+    path('logout/', views.Logout.as_view(), name="logout"),
     path('session/', views.session),
     # path('hello/', views.Hello.as_view(), name ="hello"),
 
 
-]
 ]

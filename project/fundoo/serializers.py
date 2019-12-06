@@ -1,48 +1,66 @@
+"""
+thsi file is used for serilizing the existing models
+"""
+
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from fundoo.models import Registration
+from .models import Registration
 
 
 class RegistrationSerializer(serializers.ModelSerializer):
+    """
+    registartion serializer is used for converting user data to json
+    """
     class Meta:
-        model: Registration
+        """
+        Meta class to define model
+        """
+        model = Registration
         fields = '__all__'
-
-    def save(self):
-        account = Registration(
-            email=self.validated_data['email'],
-            username=self.validated_data['username']
-        )
-        password1 = self.validated_data['password'],
-        password2 = self.validated_data['confirm_passowrd']
-        if password1 != password2:
-            raise serializers.ValidationError(
-                {'password': 'password must match'})
-
-        account.set_password(password1)
-        account.save()
-        return account
 
 
 class UserSerializer(serializers.ModelSerializer):
+    """
+    user serializer is used for converting user details to to json
+    """
     class Meta:
-        model: User
-        fieids: ['username', 'password', 'email']
+        """
+        Meta class to define model
+        """
+        model = User
+        fields = ['username', 'email', 'password']
 
 
-class LoginSerializers(serializers.ModelSerializer):
+class LoginSerializer(serializers.ModelSerializer):
+    """
+    login serializer is used for converting username and password to json
+    """
     class Meta:
-        model: User
-        fields: ['username', 'password']
+        """
+        Meta class to define model
+        """
+        model = User
+        fields = ['username', 'password']
 
 
 class ResetSerializer(serializers.ModelSerializer):
+    """
+    reset serializer is used for converting password to json
+    """
     class Meta:
-        model: User
-        fields: '[password]'
-
+        """
+        Meta class to define model
+        """
+        model = User
+        fields = ['password']
 
 class EmailSerializer(serializers.ModelSerializer):
+    """
+    email serializer is used for converting email to json
+    """
     class Meta:
-        model: User
-        fields:  ['email']
+        """
+        Meta class to define model
+        """
+        model = User
+        fields = ['email']

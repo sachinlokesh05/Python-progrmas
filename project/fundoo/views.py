@@ -26,12 +26,12 @@ import pdb
 
 from django.core.mail import EmailMultiAlternatives
 
-from fundoo.settings import EMAIL_HOST_USER
-from note.decorators import redirect_after_login
+from project.settings import EMAIL_HOST_USER
+# from note.decorators import redirect_after_login
 from lib.redis import red
 from lib.emit_emitter import ee
 from lib.token import token_activation, token_validation
-from .serializer import RegistrationSerializer, UserSerializer, LoginSerializer, ResetSerializer, EmailSerializer
+from .serializers import RegistrationSerializer, UserSerializer, LoginSerializer, ResetSerializer, EmailSerializer
 from django.core.validators import validate_email
 from django_short_url.views import get_surl
 from django_short_url.models import ShortURL
@@ -130,6 +130,9 @@ class Registrations(GenericAPIView):
                 logger.error("error: %s while loging in ", str(e))
                 return HttpResponse(json.dumps(smd), status=400)
 
+
+# @method_decorator(csrf_exempt, name='dispatch')
+# @method_decorator(redirect_after_login, name='dispatch')
 class Login(GenericAPIView):
     """
     :param APIView: user request is made from the user
@@ -200,7 +203,6 @@ class Logout(GenericAPIView):
             return HttpResponse(json.dumps(smd), status=400)
 
 
-
 class ForgotPassword(GenericAPIView):
     """
     :param request: request is made for resetting password
@@ -269,7 +271,6 @@ class ForgotPassword(GenericAPIView):
                 print(e)
                 response['message'] = "something went wrong"
                 return HttpResponse(json.dumps(response), status=400)
-
 
 
 def activate(request, surl):
@@ -395,16 +396,3 @@ def session(request):
     :return:  if token is deleted and user goes back then it will take to user page
     """
     return render(request, 'user/session.html')
-
-
-
-
-
-
-
-
-
-
-
-
-

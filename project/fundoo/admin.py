@@ -1,4 +1,11 @@
 from django.contrib import admin
-from fundoo.models import Registration
+
 # Register your models here.
-admin.site.register(Registration)
+from django.contrib.auth.admin import UserAdmin
+
+from fundoo.models import Registration
+
+
+@admin.register(Registration)
+class Registrationadmin(admin.ModelAdmin):
+    list_display = ('name','username','email','password')
