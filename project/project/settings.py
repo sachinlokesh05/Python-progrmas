@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'fundoo',
+    'user',
+    'note',
     'storages',
     'rest_framework_swagger',
     'django_short_url',
@@ -90,7 +91,6 @@ DATABASES = {
         'PORT': 5432,
     }
 }
-
 
 
 # Password validation
