@@ -45,6 +45,6 @@ class UpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notes
         fields = ['title', 'note', 'label', 'url', 'is_archive', 'collaborators',
-                  "is_copied", 'checkbox', 'is_pined', 'is_trashed', 'color', 'reminder']
+                  "is_copied", 'checkbox', 'is_pined', 'is_trashed', 'color','reminder']
 
 
