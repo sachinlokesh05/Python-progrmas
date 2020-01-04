@@ -419,4 +419,86 @@ class LabelsCreate(GenericAPIView):
         except Exception as e:
             logger.error("%s while creating label for %s", str(e), user)
             return Response(response, status=404)
+        
+@method_decorator(login_decorator, name='dispatch')
+class LabelsUpdate(GenericAPIView):
+    """
+       Summary:
+       --------
+            Label update class will let authorized user to update or delete label.
+       Methods:
+       --------
+           put: User will be able to update label.
+           delete: User will able to delete one or more labels.
+    """
+    serializer_class = LabelSerializer
+
+    def put(self, request, label_id):
+        """
+            Summary:
+            --------
+                label will be updated by the User.
+            Exception:
+            ----------
+                Exception:  if anything goes wrong.
+            Returns:
+            --------
+                response:  User will able to updated label or error msg if something goes wrong
+        """
+        response = {
+            "success": False,
+            "message": "Something bad happened",
+            "data": []
+        }
+        user = request.user
+        try:
+            # pdb.set_trace()
+            requestBody = json.loads(request.body)
+            label_name = requestBody['name']
+            label_updated = Label.objects.get(id=label_id, user_id=user.id)
+            label_updated.name = label_name
+            label_updated.save()
+            red.hmset(str(user.id) + "label", {label_updated.id: label_name})
+
+            response["message"] = "label updated successfully"
+            response["data"] = [label_name]
+            response["success"] = True
+            logger.info("label was updated for %s both on redis and database ", user)
+            return HttpResponse(json.dumps(response, indent=2), status=200)
+        except KeyError as k:
+            logger.error("error:%s while creating label for %s", str(k), user)
+            response["message"] = "label does not exist"
+            return Response(response, status=400)
+        except Exception as e:
+            logger.error("error:%s while creating label for %s", str(e), user)
+            return Response(response, status=404)
+
+    def delete(self, request, label_id):
+        """
+            Summary:
+            --------
+                label will be deleted by the User.
+            Exception:
+            ----------
+                Exception:  if anything goes wrong.
+            Returns:
+            --------
+                response:  User will able to delete label or error msg if something goes wrong
+        """
+        response = {
+            "success": False,
+            "message": "label does not exist ",
+            "data": []
+        }
+        user = request.user
+        try:
+            red.hdel(str(user.id) + "label", label_id)
+            label_id = Label.objects.get(id=label_id, user_id=user.id)
+            label_id.delete()
+            logger.info("label is deleted for %s", user)
+            response = {"success": True, "message": "label is deleted", "data": []}
+            return Response(response, status=204)
+        except Exception as e:
+            logger.info("got error : %s while deleting label for  %s", str(e), user)
+            return Response(response, status=404)
 
