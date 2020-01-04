@@ -169,3 +169,52 @@ class NoteCreate(GenericAPIView):
 
 
 
+@method_decorator(login_decorator, name='dispatch')
+class NoteUpdate(GenericAPIView):
+    """
+        Summary:
+        --------
+             Note update class will let authorized user to update and delete note.
+        Methods:
+        --------
+            get: User will get particular note which he want.
+            put: User will able to update existing note.
+            delete: User will able to delete  note.
+    """
+    serializer_class = UpdateSerializer
+
+    @staticmethod
+    def get(request, note_id):
+        """
+              Summary:
+              --------
+                  Note will be fetched by the User.
+              Exception:
+              ----------
+                  Notes.DoesNotExist: object
+              Returns:
+              --------
+                  response: will return all the note data or will return
+                            error msg if note id does not exist
+        """
+        try:
+            # pdb.set_trace()
+            redis_data = red.hmget(str(request.user.id) + "note", str(note_id))
+            user = request.user
+            if redis_data == [None]:
+                note = Notes.objects.filter(id=note_id)
+                serialized_data = NotesSerializer(note, many=True)
+                logger.info("note was fetched from database for user %s", user)
+                return HttpResponse(json.dumps(serialized_data.data, indent=1), status=200)
+
+            logger.info("note was fetched form redis for user %s", user)
+            return HttpResponse(redis_data, status=200)
+        except Notes.DoesNotExist:
+            logger.error("Note id doesnt exists, node_id:", note_id)
+            response = {'success': False, 'message': "note does not exists", 'data': []}
+            return Response(response, status=404)
+        except Exception as e:
+            logger.error("Unknown error while updating the note, %s %s:", note_id, str(e))
+            response = {'success': False, 'message': str(e), 'data': []}
+            return Response(response, status=404)
+
