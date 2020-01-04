@@ -218,3 +218,120 @@ class NoteUpdate(GenericAPIView):
             response = {'success': False, 'message': str(e), 'data': []}
             return Response(response, status=404)
 
+    @staticmethod
+    @label_coll_validator_put
+    def put(request, note_id):
+        """
+          Summary:
+          --------
+              Note will be updated by the User.
+          Exception:
+          ----------
+              Keyerror: object
+          Returns:
+          --------
+              response: will return updated note or will return error with smd format
+        """
+        user = request.user
+        try:
+            # pdb.set_trace()
+            # data is fetched from user
+            instance = Notes.objects.get(id=note_id)
+            data = request.data
+            if len(data) == 0:
+                raise KeyError
+            collaborator_list = []  # empty coll  list is formed where data is input is converted to id
+            try:
+                label = data["label"]
+                data['label'] = [Label.objects.get(name=name, user_id=request.user.id).id for name in label]
+            except KeyError:
+                logger.debug('label was not added by the user %s', user)
+                pass
+            try:
+                collaborator = data['collaborators']
+                # for loop is used for the getting label input and coll input ids
+                for email in collaborator:
+                    emails = User.objects.filter(email=email)
+                    user_id = emails.values()[0]['id']
+                    collaborator_list.append(user_id)
+                data['collaborators'] = collaborator_list
+            except KeyError:
+                logger.debug('collaborators was not added by the user %s', user)
+                pass
+            serializer = UpdateSerializer(instance, data=data, partial=True)
+            # here serialized data checked for validation and saved
+            if serializer.is_valid():
+                note_create = serializer.save()
+                response = {'success': True, 'message': "note updated", 'data': [serializer.data]}
+                print(serializer.data)
+                # pdb.set_trace()
+                if serializer.data['is_archive']:
+                    red.hmset(str(user.id) + "is_archive",
+                              {note_create.id: str(json.dumps(serializer.data))})
+                    logger.info("note was updated with note id :%s for user :%s ", note_id, user)
+                    return HttpResponse(json.dumps(response, indent=2), status=200)
+                elif serializer.data['is_trashed']:
+                    red.hmset(str(user.id) + "is_trashed",
+                              {note_create.id: str(json.dumps(serializer.data))})
+                    logger.info("note was updated with note id :%s for user :%s ", note_id, user)
+                    return HttpResponse(json.dumps(response, indent=2), status=200)
+                else:
+                    if serializer.data['reminder']:
+                        red.hmset("reminder",
+                                  {note_create.id: str(json.dumps({"email": user.email, "user": str(user),
+                                                                   "note_id": note_create.id,
+                                                                   "reminder": serializer.data["reminder"]}))})
+
+                    red.hmset(str(user.id) + "note",
+                              {note_create.id: str(json.dumps(serializer.data))})
+                    logger.info("note was updated with note id :%s for user :%s ", note_id, user)
+                    return HttpResponse(json.dumps(response, indent=2), status=200)
+            logger.error("note was updated with note id :%s for user :%s ", note_id, user)
+            response = {'success': False, 'message': "note was not created", 'data': []}
+            return HttpResponse(json.dumps(response, indent=2), status=400)
+        except KeyError as e:
+            print(e)
+            logger.error("no data was provided from user %s to update", str(e), user)
+            response = {'success': False, 'message': "note already upto data ", 'data': []}
+            return Response(response, status=400)
+        except Exception as e:
+            logger.error("got error :%s for user :%s while updating note id :%s", str(e), user, note_id)
+            response = {'success': False, 'message': str(e), 'data': []}
+            return Response(response, status=404)
+
+    def delete(self, request, note_id, *args, **kwargs):
+        """
+          Summary:
+          --------
+              Note will be deleted by the User.
+          Exception:
+          ----------
+              Keyerror: object
+          Returns:
+          --------
+              response: will return SMD format of deleted note or with error message
+        """
+
+        smd = {'success': False, 'message': 'not a vaild note id ', 'data': []}
+        user = request.user
+        try:
+            # pdb.set_trace()
+            note = Notes.objects.get(id=note_id)
+            note.is_trashed = True  # is_deleted, is_removed, is_trashed
+            note.save()
+            note_data = Notes.objects.filter(id=note_id)
+            serialized_data = NotesSerializer(note_data, many=True)
+
+            red.hmset(str(user.id) + "is_trashed",
+                      {note.id: str(json.dumps(serialized_data.data))})
+            red.hdel(str(user.id) + "note", note_id)
+            logger.info("note with node_id :%s was trashed for user :%s", note_id, request.user)
+            smd = {'success': True, 'message': 'note is deleted ', 'data': []}
+            return HttpResponse(json.dumps(smd, indent=2), status=status.HTTP_201_CREATED)
+        except KeyError:
+            logger.info("note with node_id :%s was already deleted for user :%s", note_id, request.user)
+            return HttpResponse(json.dumps(smd, indent=2), status=404)
+        except Exception as e:
+            logger.info("note with node_id :%s was already deleted for user :%s", note_id, request.user)
+            response = {'success': False, 'message': str(e), 'data': []}
+            return HttpResponse(json.dumps(response, indent=2), status=404)
