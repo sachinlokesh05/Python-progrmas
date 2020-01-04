@@ -335,3 +335,88 @@ class NoteUpdate(GenericAPIView):
             logger.info("note with node_id :%s was already deleted for user :%s", note_id, request.user)
             response = {'success': False, 'message': str(e), 'data': []}
             return HttpResponse(json.dumps(response, indent=2), status=404)
+        
+@method_decorator(login_decorator, name='dispatch')
+class LabelsCreate(GenericAPIView):
+    """
+        Summary:
+        --------
+             Label create class will let authorized user to get and create label.
+        Methods:
+        --------
+            get: User will get all the created labels by the  user.
+            post: User will able to create more labels.
+    """
+    serializer_class = LabelSerializer
+
+    def get(self, request):
+        """
+          Summary:
+          --------
+              label will be fetched by the User.
+          Exception:
+          ----------
+              Exception:  if anything goes wrong.
+          Returns:
+          --------
+              response:  User will get all the created labels by the user or
+                        error msg if label id does not exist.
+        """
+        response = {
+            "success": False,
+            "message": "something went wrong",
+            "data": []
+        }
+        try:
+            # pdb.set_trace()
+            user = request.user
+            redis_data = red.hvals(str(user.id) + "label")
+            if len(redis_data) == 0:
+                labels = Label.objects.filter(user_id=user.id)
+                label_name = [i.name for i in labels]
+                logger.info("labels where fetched from database for user :%s", request.user)
+                return Response(label_name, status=200)
+            logger.info("labels where fetched from redis for user :%s", request.user)
+            return Response(redis_data, status=200)
+        except Exception:
+            logger.error("labels where not fetched for user :%s", request.user)
+            return Response(response, status=400)
+
+    def post(self, request):
+        """
+          Summary:
+          --------
+              label will be created by the User.
+          Exception:
+          ----------
+              Exception:  if anything goes wrong.
+          Returns:
+          --------
+              response:  User will able to create labels  or
+                        error msg will be returned if something goes wrong.
+        """
+        # pdb.set_trace()
+        user = request.user
+        response = {"success": False, "message": "something went wrong", "data": []}
+        try:
+
+            label = request.data["name"]
+            if label == "":
+                logger.info("label input was not given for %s", user)
+                response['message'] = "no input"
+                return Response(response, status=400)
+
+            if Label.objects.filter(user_id=user.id, name=label).exists():
+                logger.info("label is already exists for %s", user)
+                response['message'] = "label is already exists"
+                return Response(response, status=400)
+
+            label_created = Label.objects.create(user_id=user.id, name=label)
+            red.hmset(str(user.id) + "label", {label_created.id: label})
+            logger.info("label is created for %s", user)
+            response = {"success": True, "message": "label is created", "data": label}
+            return HttpResponse(json.dumps(response), status=201)
+        except Exception as e:
+            logger.error("%s while creating label for %s", str(e), user)
+            return Response(response, status=404)
+
