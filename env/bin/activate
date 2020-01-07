@@ -37,7 +37,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="/media/user/Data/fundoo/env"
+VIRTUAL_ENV="/home/user/Documents/celery/env"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"

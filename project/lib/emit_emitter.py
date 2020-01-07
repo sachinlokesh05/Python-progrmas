@@ -2,8 +2,8 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from pyee import BaseEventEmitter
 
-from project import settings
-from project.settings import EMAIL_HOST_USER
+from fundoo import settings
+from fundoo.settings import EMAIL_HOST_USER
 
 ee = BaseEventEmitter()
 

@@ -1,5 +1,5 @@
 import redis
-from project.settings import DB, PORT
+from fundoo.settings import DB, PORT
 # class function_wrapper(object):
 #     def __init__(self, wrapped):
 #         self.wrapped = wrapped

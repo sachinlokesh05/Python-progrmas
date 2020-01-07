@@ -1,4 +1,4 @@
-#!/media/user/Data/fundoo/env/bin/python3
+#!/home/user/Documents/celery/env/bin/python3
 from django.core import management
 
 if __name__ == "__main__":

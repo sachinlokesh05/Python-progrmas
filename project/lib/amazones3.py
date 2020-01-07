@@ -1,6 +1,6 @@
 import logging
 import boto3
-from project.settings import AWS_BUCKET
+from fundoo.settings import AWS_BUCKET
 from botocore.exceptions import ClientError
 
 
@@ -19,7 +19,8 @@ class AmazoneS3:
         # Upload the file
         s3_client = boto3.client('s3')
         try:
-            response = s3_client.upload_file(file_name, AWS_BUCKET, object_name)
+            response = s3_client.upload_file(
+                file_name, AWS_BUCKET, object_name)
         except ClientError as error:
             logging.error(error)
             return False
@@ -33,7 +34,8 @@ class AmazoneS3:
         # If S3 object_name was not specified, use file_name
         s3_client = boto3.client('s3')
         try:
-            response = s3_client.delete_object(Bucket=AWS_BUCKET, Key='image/' + object_name)
+            response = s3_client.delete_object(
+                Bucket=AWS_BUCKET, Key='image/' + object_name)
         except ClientError as error:
             logging.error(error)
             return False
