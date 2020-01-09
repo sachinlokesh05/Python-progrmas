@@ -1,0 +1,211 @@
+{% extends "blog/base.html" %} {% load crispy_forms_tags %} {% block content %}
+<!-- <script>
+  $(document).ready(function() {
+    $(this).mouseenter(function() {
+      $(this).animate({
+        backgroundcolor: "yellow"
+      });
+    });
+  });
+</script> -->
+<style>
+  #note1:hover {
+    box-shadow: 0 4px 4px 4px dimgray;
+    transition-duration: 0.3s;
+  }
+</style>
+    <!-- <a href="{% url 'post-create' %}"
+      onclick="myFunction()"
+      class="form-control mr-sm-2"
+      placeholder="title"
+      type="text"
+    ></a> -->
+<!-- 
+    <div id="new" class="content-section" style="display: none;">
+    <form method="POST">
+      {% csrf_token %}
+      <fieldset class="form-group">
+        <legend class="border-bottom mb-4">Note</legend>
+        {{ form|crispy }}
+      </fieldset>
+      <div class="form-group">
+        <button class="btn btn-outline-info" type="submit">Write</button>
+      </div>
+    </form>
+  </div> -->
+  <!-- <script>
+      $(document).ready(function(){
+        $("button").click(function(){
+          $("#div1").load("blog/post_form.html");
+        });
+      });
+      </script> -->
+      <!-- <button>Get External Content</button> -->
+
+      <div id="div1"></div>
+  <script>
+    function myFunction() {
+      var x = document.getElementById("new");
+      if (x.style.display === "none") {
+        x.style.display = "block";
+      } else {
+        x.style.display = "none";
+      }
+    }
+  </script>
+</div>
+
+<div
+    id="note"
+    style="display:inline-flex;flex-wrap:wrap;justify-content:center;
+  "
+  >
+    {% for post in posts %} {% if post.author.username == user.username%} {% if post.is_archive == False %} {% if post.is_trashed == False %}
+    
+    <div
+      id="note1"
+      style="border:1px solid lightgrey ;width:280px;height: fit-content;margin:5px;padding: 10px;border-radius: 10px;background-color: {{ post.color }} ;"
+    >
+      <div class="media-body">
+        <div class="article-metadata">
+          <a class="mr-2" href="{% url 'user-posts' post.author.username %}"
+            >{{ post.author }}</a
+          >
+          <small class="text-muted">{{ post.date_posted|date:"F d, Y" }}</small>
+        </div>
+        <h2>
+          <a class="article-title" href="{% url 'post-update' post.id %}"
+            >{{ post.title }}</a
+          >
+        </h2>
+        <p class="article-content">{{ post.content }}</p>
+        <!-- ​<img src="{{ user.post_image.url }}" alt="" class="img-thumbnail"> -->
+        <!-- <h3>{{ label_name }}</h3> -->
+        {% for p in post.label.all %} 
+      <div style="width:fit-content" >
+        <h6 class="label-hover" style="list-style: none;background-color:#D3D3D3 ;  color: black; border-radius: 5px;">{{ p }}</h6>
+      </div>
+      <style>
+        .label-hover:hover{
+          box-shadow: 2px 2px 2px 2px grey;
+          transition-property: all;
+        }
+      </style>
+    {% endfor %}
+        
+      </div>
+        <small>{{ Label.post.name }}</small>
+          <div class="icons" >
+            <a href=""><i class="far fa-bell"></i></a>
+            <a href="#"><i id="" class="fas fa-user-friends"></i></a>
+            <a href="{% url 'color' post.id %}"><i class="fas fa-palette"></i></a>
+              <a href=""><i class="far fa-images"></i></a>
+            <a href="{% url 'archive' post.id %}"><i class="fas fa-archive"  ></i></a>
+             <div class="more" href=""><i class="fas fa-ellipsis-v"></i>
+              <div class="menu_container">
+                  <a href="{% url 'trashed' post.id  %}" target="_self">Delete note</a>
+                  <a href="{% url 'label-update' post.id  %}" target="_self">Add label</a>
+                  <a href="/js/default.asp" target="_blank">Make a copy</a>
+              </div>
+            </div>
+          </div>
+     <!-- <form action="" method="POST">
+       {% csrf_token %}
+<div id="div_id_is_archive" class="form-check"> <label for="id_is_archive" class="form-check-label"> 
+    <input type="checkbox" name="is_archive" class="checkboxinput form-check-input" id="id_is_archive">
+                        Is_archived
+                    </label> </div>
+                    <div class="form-group">
+                        <button class="btn btn-outline-info" type="submit">Write</button>
+                      </div>
+                      </form> -->
+          <style>
+              
+              
+              .icons .more {
+                position: relative;
+                display: inline-block;
+              }
+              
+              .menu_container {
+                display: none;
+                position: absolute;
+                background-color: #f9f9f9;
+                min-width: 160px;
+                box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+                z-index: 1;
+              }
+              
+              .menu_container a {
+                color: black;
+                padding: 12px 16px;
+                text-decoration: none;
+                display: block;
+              }
+              
+              .menu_container a:hover {background-color: #f1f1f1}
+              
+              .more:hover .menu_container{
+                display: block;
+              }
+              
+              </style>
+      <style>
+        .icons i{
+          padding:12px;
+        }
+        
+       
+       .icons a{
+         color: black;
+         }
+         .icons i:hover{
+          box-shadow: 0 1px 2px 2px grey;
+border-radius: 30px;          transition: 0.3s;
+         }
+      </style>
+      <!-- <script>
+          $(document).ready(function(){
+            $("#note1").on({
+              mouseenter: function(){
+                $("#icons").show();
+              },  
+              mouseleave: function(){
+                $("#icons").hide();
+              } 
+            });
+          });
+          </script> -->
+         
+    </div>
+   {% endif %}
+   {% endif %} {% endif %} {% endfor %} 
+    
+    </div>
+    <div style="position: fixed;bottom:20px;right:500px;">
+      {% if is_paginated %} {% if page_obj.has_previous %}
+      <a class="btn btn-outline-info mb-4" href="?page=1">First</a>
+      <a
+      class="btn btn-outline-info mb-4"
+      href="?page={{ page_obj.previous_page_number }}"
+      >Previous</a
+     >
+      {% endif %} {% for num in page_obj.paginator.page_range %}
+      <a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a>
+
+      <!-- <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a> -->
+      {% endfor %} {% if page_obj.has_next %}
+      <a
+      class="btn btn-outline-info mb-4"
+      href="?page={{ page_obj.next_page_number }}"
+      >Next</a
+      >
+      <a
+      class="btn btn-outline-info mb-4"
+      href="?page={{ page_obj.paginator.num_pages }}"
+      >Last</a
+     >
+      </div>
+      {% endif %} {% endif %}
+</div>
+              {% endblock content %}

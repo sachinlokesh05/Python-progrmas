@@ -1,0 +1,285 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <link href="/your-path-to-fontawesome/css/fontawesome.css" rel="stylesheet">
+    <link href="/your-path-to-fontawesome/css/brands.css" rel="stylesheet">
+    <link href="/your-path-to-fontawesome/css/solid.css" rel="stylesheet">
+    <script src="https://code.iconify.design/1/1.0.3/iconify.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      crossorigin="anonymous"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <script src="https://kit.fontawesome.com/2480c88c4b.js" crossorigin="anonymous"></script>
+
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'blog/main.css' %}"
+    />
+    {% if title %}
+    <title>{{ title }}</title>
+    {% else %}
+    <title>FUNDOO</title>
+    {% endif %}
+    <style>
+      body {
+        font-family: "Lato", sans-serif;
+      }
+
+      .sidepanel {
+        width: 0;
+        position: fixed;
+        z-index: 1;
+        height: 900px;
+        top: 0;
+        left: 0;
+        background-color: white;
+        border-right:solid 2px #F5F5DC	 ;
+        overflow-x: hidden;
+        padding-top: 50px;
+        margin-top: 65px;
+        border-radius: 5px;
+      }
+
+      .sidepanel a {
+        padding: 8px 8px 8px 32px;
+        text-decoration: none;
+        font-size: 25px;
+        color:black;
+        display: block;
+        transition: 0.3s;
+      }
+
+      .sidepanel a:active {
+        background-color: #DAA520	 ;
+      }
+
+      .sidepanel a:hover {
+        color: black;
+        background-color: #D3D3D3;
+        border-bottom-right-radius  : 20px;
+        border-top-right-radius : 20px;
+
+      }
+
+      .sidepanel .closebtn {
+        position: absolute;
+        top: 0;
+        right: 25px;
+        font-size: 36px;
+      }
+
+      .sidepanel .openbtn {
+        font-size: 20px;
+        cursor: pointer;
+        background-color:transparent;
+        padding: 15px 15px;
+        border: none;
+        transition:2s;
+      }
+
+      .openbtn:hover {
+        box-shadow: #A9A9A9;      }
+      
+    </style>
+  </head>
+  <body >
+    <header id="container1" class="site-header">
+      <nav
+        class="navbar navbar-expand-md navbar-white bg-white fixed-top"
+        style="position: absolute;border-bottom: 1px solid grey;border-radius: 5px;
+        height: 65px;"
+      >
+        <div id="mySidepanel" class="sidepanel">
+          <!-- <a id="cls_btnn" href="javascript:void(0)" class="closebtn">&times;</a> -->
+          <a id="note_btn" href="{% url 'blog-home' %}"><i class="far fa-lightbulb" >
+            &nbsp;Notes</i></a>
+          <a href="#" ><i style="font-size: 20px;" class="far fa-bell" >&nbsp;&nbsp;Reminders</i></a>
+          <hr>
+          <p style="padding-left: 20px;" >Label</p>
+          <div > 
+
+            {% for post in posts %}
+            {% if post.author.username == user.username%} {% if post.is_archive == False %} {% if post.is_trashed == False %}
+  
+            <a href="{% url 'post-detail' post.id %}" style="font-size: 20px;border: 1px solid;
+             border-radius: 5px;
+             flex-wrap: wrap;
+             display: flex;
+             margin: 5px;">
+             {{ post.title }}</a>
+
+             {% endif %}
+            {% endif %}
+            {% endif %}
+            {% endfor %}
+          </div>
+          <hr>
+            <a style="font-size: 20px;" href="{% url 'archive_list' %}"><span class="iconify" data-icon="bx:bx-archive-in" ></span>&nbsp;&nbsp;Archive</a>
+            <a style="font-size: 20px;" href="{% url 'trashed_list' %}"><i class="far fa-trash-alt">&nbsp;&nbsp;Trashed</i></a>
+
+        </div>
+            <i style="width: 50px; margin: auto;" class="fas fa-bars" onclick="openNav()"></i>   
+        <script>
+          function openNav() {
+            document.getElementById("mySidepanel").style.width = "250px";
+            document.getElementById("main_mams").style.marginLeft = "30%";
+            document.getElementById("mySidepanel").style.display = "block";
+            document.getElementById("mySidepanel").style.transition = "2s";
+          }
+
+          function closeNav() {
+            document.getElementById("mySidepanel").style.display = "none";
+            document.getElementById("mySidepanel").style.transition = "all 10s";
+            document.getElementById("main_mams").style.marginLeft = "20%";
+            document.getElementById("mySidepanel").style.transition = "2s";
+ 
+          }
+        </script>
+        <div class="container">
+            <a class="navbar-brand" href="" style="position: relative;left: 10px;">
+                <img src="https://www.gstatic.com/images/branding/product/1x/keep_48dp.png" style="enable-background: accumulate;" width="30" height="30" class="d-inline-block align-top" alt="">
+          <a class="navbar-brand mr-4" href="{% url 'blog-home' %}" style="color: black;margin: auto;">FUNDOO</a>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-toggle="collapse"
+            data-target="#navbarToggle"
+            aria-controls="navbarToggle"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse"  id="navbarToggle">
+            {% if user.is_authenticated %}
+<!-- 
+            <div class="navbar-nav mr-auto">
+              <a class="nav-item nav-link" href="{% url 'blog-home' %}" style="color: black;" >Home</a>
+              <a class="nav-item nav-link" href="{% url 'blog-about' %}" style="color: black;"
+                >About</a
+              >
+            </div> -->
+             <style>
+                #search:hover { 
+                  box-shadow: 0 5px 10px gray;
+                  transition-duration: 0.5ms;
+                }
+              </style>
+              <form class="form-inline" action="{% url 'search_results' %}" method="get" style="color: black;">
+                <input class="form-control mr-sm-2"  style="width: 600px;height:45px;"  id="search" name="q" type="text" placeholder="Search..." />
+                <button class="btn btn-outline-warning" type="submit" >Search</button>
+
+              </form>
+            
+            {% endif %}
+                <style>
+                  #profile:hover{
+                    box-shadow:0 2px 2px 2px dimgray;
+                    border-radius: 10px;
+                  }
+                </style>
+            <!-- Navbar Right Side -->
+            <div class="navbar-nav" >
+              {% if user.is_authenticated %}
+              <style>
+                #notte:hover{
+                  transition:0.5s;
+                        box-shadow:0 2px 1px 2px #DEB887	;
+                        border-radius: 5px;
+                }
+                #notte{
+                  padding-left: 10px;
+                }
+                #profileee{
+                 padding-left: 25px;
+                }
+              </style>
+              <a id="notte" class="nav-item nav-link" href="{% url 'post-create' %}" style="color: black;margin: auto;"
+                >Note</a
+              >
+              <script>
+                $(document).ready(function(){
+                  $("#grid").mouseenter(function(){
+                    $("#grid_p").css("visibility","block");
+                  });
+                });
+              </script>
+              <style>
+                #grid:hover .rounded.tooltiptext {
+                  visibility: visible;
+                }
+              </style>
+               <a data-toggle="tooltip" data-placement="top" title="grid_view" id="grid" style="margin: auto;padding-right: 10px;"
+               href="{% url 'blog-home' %}"><i style="color: black;" class="fas fa-th-large"></i></a>
+               <a  data-toggle="tooltip" data-placement="top" title="list view!" id="list" style="margin: auto; width: auto;height: auto; "
+               href="{% url 'blog-home1' %}"><i style="color: black;" class="fas fa-list"></i></a>
+              <a id="profileee" class="nav-item nav-link" href="{% url 'profile' %}" style="color: black; margin: auto;padding-left: 10px;"
+                ><img id="profile" class="rounded-circle" src="{{user.profile.image.url}}" alt="profile_pic" width="60" height="60  "></a>
+              <a class="nav-item nav-link"  href="{% url 'logout' %}" style="color: black; margin: auto; padding-left:35px ;" >Logout</a>
+              {% else %}
+              <a class="nav-item nav-link" href="{% url 'login' %}" style="color: black;margin: auto;" >Login</a>
+              <a class="nav-item nav-link" href="{% url 'register' %}" style="color: black; " 
+                >Register</a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <main style="margin-left: 20%;" role="main" class="container" id="main_mams">
+      <div class="row"  onclick="closeNav()" >
+        <div class="col-md-12" >
+          {% if messages %} {% for message in messages %}
+          <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+          </div>
+          {% endfor %} {% endif %} 
+         
+          {% block content %}{% endblock %}
+        </div>
+        <!-- <div class="col-md-4">
+          <div class="content-section">
+            <h3>Our Sidebar</h3>
+            <p class='text-muted'>You can put any information here you'd like.
+              <ul class="list-group">
+                <li class="list-group-item list-group-item-light">Latest Posts</li>
+                <li class="list-group-item list-group-item-light">Announcements</li>
+                <li class="list-group-item list-group-item-light">Calendars</li>
+                <li class="list-group-item list-group-item-light">etc</li>
+              </ul>
+            </p> -->
+          </div>
+        </div> 
+      </div>
+    </main>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script
+      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
