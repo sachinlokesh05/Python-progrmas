@@ -1,26 +1,29 @@
-import re
 import warnings
 from collections import Counter, OrderedDict
 from urllib import parse
 
 from django.db import models
-from django.utils.encoding import force_text, smart_text
+from django.utils.encoding import force_str
 
 from rest_framework import exceptions, serializers
 from rest_framework.compat import coreapi, coreschema, uritemplate
 from rest_framework.settings import api_settings
-from rest_framework.utils import formatting
 
 from .generators import BaseSchemaGenerator
 from .inspectors import ViewInspector
 from .utils import get_pk_description, is_list_view
 
-# Used in _get_description_section()
-# TODO: ???: move up to base.
-header_regex = re.compile('^[a-zA-Z][0-9A-Za-z_]*:')
 
-# Generator #
-# TODO: Pull some of this into base.
+def common_path(paths):
+    split_paths = [path.strip('/').split('/') for path in paths]
+    s1 = min(split_paths)
+    s2 = max(split_paths)
+    common = s1
+    for i, c in enumerate(s1):
+        if c != s2[i]:
+            common = s1[:i]
+            break
+    return '/' + '/'.join(common)
 
 
 def is_custom_action(action):
@@ -113,7 +116,7 @@ class SchemaGenerator(BaseSchemaGenerator):
     # Set by 'SCHEMA_COERCE_METHOD_NAMES'.
     coerce_method_names = None
 
-    def __init__(self, title=None, url=None, description=None, patterns=None, urlconf=None):
+    def __init__(self, title=None, url=None, description=None, patterns=None, urlconf=None, version=None):
         assert coreapi, '`coreapi` must be installed for schema support.'
         assert coreschema, '`coreschema` must be installed for schema support.'
 
@@ -209,12 +212,43 @@ class SchemaGenerator(BaseSchemaGenerator):
         # Default action, eg "/users/", "/users/{pk}/"
         return named_path_components + [action]
 
+    def determine_path_prefix(self, paths):
+        """
+        Given a list of all paths, return the common prefix which should be
+        discounted when generating a schema structure.
+
+        This will be the longest common string that does not include that last
+        component of the URL, or the last component before a path parameter.
+
+        For example:
+
+        /api/v1/users/
+        /api/v1/users/{pk}/
+
+        The path prefix is '/api/v1'
+        """
+        prefixes = []
+        for path in paths:
+            components = path.strip('/').split('/')
+            initial_components = []
+            for component in components:
+                if '{' in component:
+                    break
+                initial_components.append(component)
+            prefix = '/'.join(initial_components[:-1])
+            if not prefix:
+                # We can just break early in the case that there's at least
+                # one URL that doesn't have a path prefix.
+                return '/'
+            prefixes.append('/' + prefix + '/')
+        return common_path(prefixes)
+
 # View Inspectors #
 
 
 def field_to_schema(field):
-    title = force_text(field.label) if field.label else ''
-    description = force_text(field.help_text) if field.help_text else ''
+    title = force_str(field.label) if field.label else ''
+    description = force_str(field.help_text) if field.help_text else ''
 
     if isinstance(field, (serializers.ListSerializer, serializers.ListField)):
         child_schema = field_to_schema(field.child)
@@ -355,44 +389,6 @@ class AutoSchema(ViewInspector):
             description=description
         )
 
-    def get_description(self, path, method):
-        """
-        Determine a link description.
-
-        This will be based on the method docstring if one exists,
-        or else the class docstring.
-        """
-        view = self.view
-
-        method_name = getattr(view, 'action', method.lower())
-        method_docstring = getattr(view, method_name, None).__doc__
-        if method_docstring:
-            # An explicit docstring on the method or action.
-            return self._get_description_section(view, method.lower(), formatting.dedent(smart_text(method_docstring)))
-        else:
-            return self._get_description_section(view, getattr(view, 'action', method.lower()), view.get_view_description())
-
-    def _get_description_section(self, view, header, description):
-        lines = [line for line in description.splitlines()]
-        current_section = ''
-        sections = {'': ''}
-
-        for line in lines:
-            if header_regex.match(line):
-                current_section, seperator, lead = line.partition(':')
-                sections[current_section] = lead.strip()
-            else:
-                sections[current_section] += '\n' + line
-
-        # TODO: SCHEMA_COERCE_METHOD_NAMES appears here and in `SchemaGenerator.get_keys`
-        coerce_method_names = api_settings.SCHEMA_COERCE_METHOD_NAMES
-        if header in sections:
-            return sections[header].strip()
-        if header in coerce_method_names:
-            if coerce_method_names[header] in sections:
-                return sections[coerce_method_names[header]].strip()
-        return sections[''].strip()
-
     def get_path_fields(self, path, method):
         """
         Return a list of `coreapi.Field` instances corresponding to any
@@ -415,10 +411,10 @@ class AutoSchema(ViewInspector):
                     model_field = None
 
                 if model_field is not None and model_field.verbose_name:
-                    title = force_text(model_field.verbose_name)
+                    title = force_str(model_field.verbose_name)
 
                 if model_field is not None and model_field.help_text:
-                    description = force_text(model_field.help_text)
+                    description = force_str(model_field.help_text)
                 elif model_field is not None and model_field.primary_key:
                     description = get_pk_description(model, model_field)
 

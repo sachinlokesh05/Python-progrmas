@@ -1,4 +1,4 @@
-#!/media/user/Data/fundoo/env/bin/python3
+#!/home/user/Downloads/corey/code_snippets/Django_Blog/13-AWS-S3-Uploads/env/bin/python3
 
 # $Id: rst2xetex.py 7847 2015-03-17 17:30:47Z milde $
 # Author: Guenter Milde

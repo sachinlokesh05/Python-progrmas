@@ -29,7 +29,7 @@ end
 # unset irrelevant variables
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV "/media/user/Data/fundoo/env"
+set -gx VIRTUAL_ENV "/home/user/Downloads/corey/code_snippets/Django_Blog/13-AWS-S3-Uploads/env"
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/bin" $PATH

@@ -37,7 +37,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="/media/user/Data/fundoo/env"
+VIRTUAL_ENV="/home/user/Downloads/corey/code_snippets/Django_Blog/13-AWS-S3-Uploads/env"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"

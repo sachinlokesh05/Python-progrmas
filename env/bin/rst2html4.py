@@ -1,4 +1,4 @@
-#!/media/user/Data/fundoo/env/bin/python3
+#!/home/user/Downloads/corey/code_snippets/Django_Blog/13-AWS-S3-Uploads/env/bin/python3
 
 # $Id: rst2html4.py 7994 2016-12-10 17:41:45Z milde $
 # Author: David Goodger <goodger@python.org>

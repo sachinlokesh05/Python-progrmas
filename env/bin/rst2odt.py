@@ -1,4 +1,4 @@
-#!/media/user/Data/fundoo/env/bin/python3
+#!/home/user/Downloads/corey/code_snippets/Django_Blog/13-AWS-S3-Uploads/env/bin/python3
 
 # $Id: rst2odt.py 5839 2009-01-07 19:09:28Z dkuhlman $
 # Author: Dave Kuhlman <dkuhlman@rexx.com>
