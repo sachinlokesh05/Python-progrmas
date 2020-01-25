@@ -8,7 +8,7 @@ import os
 from celery import Celery
 from celery.schedules import crontab
 
-app = Celery('hello', broker="redis://localhost:6379")
+app = Celery('hello', broker="redis://127.0.0.1:6379/")
 app.conf.beat_schedule = {
     'test-task': {
         'task': 'tasks.email',
@@ -19,4 +19,4 @@ app.conf.beat_schedule = {
 
 @app.task()
 def email():
-    requests.get(url="http://localhost:8000/api/celery",)
+    requests.get(url="http://localhost:8778/api/celery",)

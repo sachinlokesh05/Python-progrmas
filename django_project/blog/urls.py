@@ -23,11 +23,18 @@ from .views import (
     LabelUpdateView,
     PinUpdateView,
     CollUpdateView,
-    RemainderUpdateView
+    RemainderUpdateView,
+    Celery,
+    # chart_view,
+    LineChartJSONView,
+    ChartView,
+    ChartData,
 )
 from . import views
 
 urlpatterns = [
+    # path('chats/', LineChartJSONView.as_view(template_name='blog/charts.html'),
+    #      name='line_chart_json'),
     path('', PostListView.as_view(), name='blog-home'),
     path('listview/', PostListView1.as_view(), name='blog-home1'),
     path('label_listview/', LabelDetailView.as_view(), name='label-home'),
@@ -52,7 +59,10 @@ urlpatterns = [
     path('about/', views.about, name='blog-about'),
     path('post/<int:pk>/image/update/',
          PostImageUpdateView.as_view(), name='post-image-update'),
+    path("celery/", Celery.as_view(), name="celery"),
 
+    path('chart/', ChartView.as_view(), name='chart_view'),
+    path('api/chart/data/', ChartData.as_view(), name="chart"),
 ]
 
 if settings.DEBUG:

@@ -61,7 +61,6 @@
   "
   >
     {% for post in posts %} {% if post.author.username == user.username%} {% if post.is_archive == False %} {% if post.is_trashed == False %}
-    
     <div
       id="note1"
       style="border:1px solid lightgrey ;width:280px;height: fit-content;margin:5px;padding: 10px;border-radius: 10px;background-color: {{ post.color }} ;"
@@ -89,7 +88,7 @@
 
       <div style="width:fit-content" >
           {% for p in post.label.all %} 
-       <h6 class="label-hover" style="list-style: none;background-color:#D3D3D3 ;  color: black; border-radius: 5px;display: inline;">{{ p }}</h6>
+       <h6 class="label-hover" style="list-style: none;background-color:#D3D3D3 ;  color: black; border-radius: 2px;display: inline;">{{ p }}</h6>
        {% endfor %}
       </div>
       <style>
@@ -210,12 +209,13 @@ border-radius: 30px;          transition: 0.3s;
             });
           });
           </script> -->
-         
+    
     </div>
    {% endif %}
    {% endif %} {% endif %} {% endfor %} 
     
     </div>
+  
     <div style="position: fixed;bottom:20px;right:500px;">
       {% if is_paginated %} {% if page_obj.has_previous %}
       <a class="btn btn-outline-info mb-4" href="?page=1">First</a>
@@ -241,5 +241,6 @@ border-radius: 30px;          transition: 0.3s;
      >
       </div>
       {% endif %} {% endif %}
+      
 </div>
               {% endblock content %}
